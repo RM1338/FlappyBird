@@ -101,6 +101,7 @@ On Linux/macOS, link against `raylib` and the appropriate system libraries as de
 
 In `src/game.h`, you can adjust:
 
+```
 #define GRAVITY 420.0f
 #define FLAP_STRENGTH -260.0f
 
@@ -109,7 +110,7 @@ In `src/game.h`, you can adjust:
 
 #define MIN_GAP_SIZE 135
 #define MAX_GAP_SIZE 185
-
+```
 
 - Increase `PIPE_SPEED` or decrease `MIN_GAP_SIZE` for a harder game.  
 - Tweak `GRAVITY` and `FLAP_STRENGTH` to change the feel of the bird. [web:141]
