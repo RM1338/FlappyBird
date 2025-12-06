@@ -75,10 +75,27 @@ void UnloadGame(Game *game) {
 
 // Pipes
 void SpawnPipe(Game *game) {
-    if (game->pipeCount >= 16) game->pipeCount = 0;
+    Pipe *pipe = NULL;
+    int foundIndex = -1;
+    
+    for (int i = 0; i < 16; i++) {
+        int checkIndex = (game->pipeCount + i) % 16;
+        
+        if (!game->pipes[checkIndex].active) {
+            pipe = &game->pipes[checkIndex];
+            foundIndex = checkIndex;
+            break; // Slot found, exit loop
+        }
+    }
 
-    Pipe *pipe = &game->pipes[game->pipeCount];
+    if (pipe == NULL) {
+        int overwriteIndex = game->pipeCount % 16;
+        pipe = &game->pipes[overwriteIndex];
+        foundIndex = overwriteIndex;
+    }
 
+    game->pipeCount = (foundIndex + 1) % 16; 
+    
     int gapSize = MIN_GAP_SIZE + rand() % (MAX_GAP_SIZE - MIN_GAP_SIZE + 1);
     int minY = 60;
     int maxY = SCREEN_HEIGHT - 60 - gapSize;
@@ -94,7 +111,6 @@ void SpawnPipe(Game *game) {
 
     pipe->active = true;
     pipe->scored = false;
-    game->pipeCount++;
 }
 
 // Update
