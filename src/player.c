@@ -47,12 +47,14 @@ Rectangle BirdGetRect(const Bird *bird) {
 void DrawBirdSprite(const Game *game) {
     const Bird *bird = &game->bird;
 
-    // Source: exactly the full 27x20 texture
-    Rectangle src = { 0.0f, 0.0f,
-                      (float)game->texBird.width,
-                      (float)game->texBird.height };
+    // Use full 27x20 bird.png
+    Rectangle src = {
+        0.0f,
+        0.0f,
+        (float)game->texBird.width,
+        (float)game->texBird.height
+    };
 
-    // Destination: draw at bird position with same size
     Rectangle dst = {
         bird->position.x,
         bird->position.y,
