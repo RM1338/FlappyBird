@@ -28,6 +28,7 @@
 
 ## 📁 Project Structure
 
+```
 FlappyBird/  
 ├── assets/  
 │ ├── bg.png # Background (800x600)  
@@ -39,11 +40,12 @@ FlappyBird/
 │ ├── score.wav  
 │ └── hit.wav  
 └── src/  
-├── main.c # Window + game loop  
-├── game.h # Game structs, constants, and API  
-├── game.c # Game logic, pipes, states, drawing  
-├── player.h # Bird API  
-└── player.c # Bird physics and rendering  
+├── main.c (Window + game loop)  
+├── game.h (Game structs, constants, and API)  
+├── game.c (Game logic, pipes, states, drawing)  
+├── player.h (Bird API)  
+└── player.c (Bird physics and rendering)  
+```
 
 ---
 
@@ -57,19 +59,21 @@ FlappyBird/
 ### Steps
 
 1. **Clone the repository**
-`
+```
 git clone https://github.com/YourUsername/FlappyBird.git
-`cd FlappyBird`
+cd FlappyBird
+```
 
 
 2. **Build the game (Windows example)**
 
+```
 gcc src/main.c src/game.c src/player.c ^
 -I C:\raylib\include ^
 -L C:\raylib\lib ^
 -lraylib -lopengl32 -lgdi32 -lwinmm ^
 -o FlappyBird.exe
-
+```
 
 On Linux/macOS, link against `raylib` and the appropriate system libraries as described in the raylib build instructions. [web:141]
 
