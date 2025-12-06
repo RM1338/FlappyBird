@@ -17,11 +17,10 @@ static void InitAssets(Game *game) {
     game->sScore = LoadSound("assets/sounds/score.wav");
     game->sHit   = LoadSound("assets/sounds/hit.wav");
 
-    // Load pixel font similar to Flappy Bird (press-start-2p or similar)
+    // Pixel font similar to Flappy Bird (place as assets/font.ttf)
     game->font = LoadFont("assets/font.ttf");
 }
 
-// unload
 static void UnloadAssets(Game *game) {
     UnloadTexture(game->texBird);
     UnloadTexture(game->texPipe);
@@ -107,6 +106,14 @@ void UpdateGame(Game *game, float dt) {
             game->state = GAME_RUNNING;
             BirdFlap(&game->bird);
             PlaySound(game->sFlap);
+        }
+        return;
+    }
+
+    // Game over: tap to restart
+    if (game->state == GAME_OVER) {
+        if (IsKeyPressed(KEY_SPACE) || IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            ResetGame(game);
         }
         return;
     }
@@ -234,25 +241,29 @@ void DrawGame(const Game *game) {
     // Colors for text
     Color uiColor = (Color){ 255, 230, 0, 255 };   // bright yellow
     Color shadow  = (Color){ 0, 0, 0, 160 };
-
-    // Score text (with shadow for readability)
-    int fontSizeScore = 32;
-    Vector2 pos = { 20, 20 };
     Vector2 shadowOffset = { 2, 2 };
+
+    // Score text (with shadow)
+    int fontSizeScore = 32;
+    Vector2 posScore = { 20, 20 };
 
     const char *scoreStr = TextFormat("SCORE: %d", game->score);
     DrawTextEx(game->font, scoreStr,
-               (Vector2){ pos.x + shadowOffset.x, pos.y + shadowOffset.y },
+               (Vector2){ posScore.x + shadowOffset.x,
+                          posScore.y + shadowOffset.y },
                fontSizeScore, 2, shadow);
-    DrawTextEx(game->font, scoreStr, pos, fontSizeScore, 2, uiColor);
+    DrawTextEx(game->font, scoreStr,
+               posScore, fontSizeScore, 2, uiColor);
 
     int fontSizeBest = 20;
     Vector2 posBest = { 20, 60 };
     const char *bestStr = TextFormat("BEST: %d", game->highScore);
     DrawTextEx(game->font, bestStr,
-               (Vector2){ posBest.x + shadowOffset.x, posBest.y + shadowOffset.y },
+               (Vector2){ posBest.x + shadowOffset.x,
+                          posBest.y + shadowOffset.y },
                fontSizeBest, 2, shadow);
-    DrawTextEx(game->font, bestStr, posBest, fontSizeBest, 2, uiColor);
+    DrawTextEx(game->font, bestStr,
+               posBest, fontSizeBest, 2, uiColor);
 
     // Waiting hint
     if (game->state == GAME_WAITING) {
@@ -265,12 +276,9 @@ void DrawGame(const Game *game) {
         };
 
         DrawTextEx(game->font, hint,
-                   (Vector2){ center.x + shadowOffset.x
-                DrawTextEx(game->font, hint,
                    (Vector2){ center.x + shadowOffset.x,
                               center.y + shadowOffset.y },
                    fontSize, 2, shadow);
-
         DrawTextEx(game->font, hint,
                    center,
                    fontSize, 2, uiColor);
@@ -288,11 +296,11 @@ void DrawGame(const Game *game) {
             SCREEN_HEIGHT / 2.0f - 60.0f
         };
 
-        // shadow + main text
         DrawTextEx(game->font, msg,
                    (Vector2){ msgPos.x + 2, msgPos.y + 2 },
                    fontSize, 2, shadow);
-        DrawTextEx(game->font, msg, msgPos, fontSize, 2, uiColor);
+        DrawTextEx(game->font, msg,
+                   msgPos, fontSize, 2, uiColor);
 
         const char *hint = "Press SPACE or Left Click to restart";
         int hintSize = 20;
@@ -305,6 +313,7 @@ void DrawGame(const Game *game) {
         DrawTextEx(game->font, hint,
                    (Vector2){ hintPos.x + 2, hintPos.y + 2 },
                    hintSize, 2, shadow);
-        DrawTextEx(game->font, hint, hintPos, hintSize, 2, uiColor);
+        DrawTextEx(game->font, hint,
+                   hintPos, hintSize, 2, uiColor);
     }
 }
