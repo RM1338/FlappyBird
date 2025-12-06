@@ -7,7 +7,7 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-// Bird physics (tuned)
+// Bird physics
 #define GRAVITY        420.0f
 #define FLAP_STRENGTH -260.0f
 
@@ -22,9 +22,9 @@
 #define MAX_GAP_SIZE 185
 
 typedef enum {
-    GAME_WAITING,
-    GAME_RUNNING,
-    GAME_OVER
+    GAME_WAITING,   // before first tap after launch
+    GAME_RUNNING,   // active play
+    GAME_OVER       // death screen
 } GameState;
 
 typedef struct Bird {
@@ -59,7 +59,7 @@ typedef struct {
     Sound sScore;
     Sound sHit;
 
-    Font font;     // pixel font
+    Font font;     // pixel font used for UI
 
     Bird bird;
 } Game;
