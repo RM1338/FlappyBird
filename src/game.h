@@ -8,7 +8,7 @@
 #define SCREEN_HEIGHT 600
 
 // Bird physics
-#define GRAVITY 420.0f
+#define GRAVITY        420.0f
 #define FLAP_STRENGTH -260.0f
 
 // Pipes
@@ -22,6 +22,7 @@
 #define MAX_GAP_SIZE 185
 
 typedef enum {
+    GAME_WAITING,   
     GAME_RUNNING,
     GAME_OVER
 } GameState;
