@@ -7,7 +7,7 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-// Bird physics
+// Bird physics (tuned)
 #define GRAVITY        420.0f
 #define FLAP_STRENGTH -260.0f
 
@@ -22,7 +22,7 @@
 #define MAX_GAP_SIZE 185
 
 typedef enum {
-    GAME_WAITING,   
+    GAME_WAITING,
     GAME_RUNNING,
     GAME_OVER
 } GameState;
@@ -58,6 +58,8 @@ typedef struct {
     Sound sFlap;
     Sound sScore;
     Sound sHit;
+
+    Font font;     // pixel font
 
     Bird bird;
 } Game;
