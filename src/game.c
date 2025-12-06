@@ -1,4 +1,3 @@
-// src/game.c
 #include "game.h"
 #include "player.h"
 #include <stdlib.h>
@@ -57,7 +56,7 @@ void InitGame(Game *game) {
 }
 
 void ResetGame(Game *game) {
-    game->state = GAME_WAITING;
+    game->state = GAME_RUNNING;        // restart directly into gameplay
     game->score = 0;
     game->pipeSpawnTimer = 0.0f;
     game->pipeCount = 0;
@@ -176,54 +175,40 @@ void DrawGame(const Game *game) {
     // Background
     DrawTexture(game->texBg, 0, 0, WHITE);
 
-    // Texture regions for pipe.png (80 x 217, cap at top)
-    Rectangle srcCap  = { 0, 0, PIPE_WIDTH, PIPE_CAP_HEIGHT };
+    Rectangle srcCap  = { 0, 0, PIPE_WIDTH, PIPE_CAP_HEIGHT }; 
     Rectangle srcBody = {
         0,
         PIPE_CAP_HEIGHT,
         PIPE_WIDTH,
         game->texPipe.height - PIPE_CAP_HEIGHT
     };
+    
+    Rectangle srcCapFlipped = { 0, PIPE_CAP_HEIGHT, PIPE_WIDTH, (float)-PIPE_CAP_HEIGHT };
+    
+    float pipeBodyHeight = game->texPipe.height - PIPE_CAP_HEIGHT;
+    Rectangle srcBodyFlipped = { 0, game->texPipe.height, PIPE_WIDTH, -pipeBodyHeight };
+
 
     // Pipes
     for (int i = 0; i < game->pipeCount; i++) {
         const Pipe *p = &game->pipes[i];
         if (!p->active) continue;
 
-        // ---------- TOP PIPE ----------
         float topBodyHeight = p->top.height - PIPE_CAP_HEIGHT;
         if (topBodyHeight < 0) topBodyHeight = 0;
 
-        Rectangle dstTopBody = {
-            p->top.x,
-            p->top.y,
-            PIPE_WIDTH,
-            topBodyHeight
-        };
-        DrawTexturePro(game->texPipe, srcBody, dstTopBody,
-                       (Vector2){0,0}, 0.0f, WHITE);
+        // Draw top pipe body (using normal source)
+        Rectangle dstTopBody = { p->top.x, p->top.y, PIPE_WIDTH, topBodyHeight };
+        DrawTexturePro(game->texPipe, srcBody, dstTopBody, (Vector2){0,0}, 0.0f, WHITE);
 
-        Rectangle dstTopCap = {
-            p->top.x,
-            p->top.y + topBodyHeight,
-            PIPE_WIDTH,
-            PIPE_CAP_HEIGHT
-        };
-        DrawTexturePro(game->texPipe, srcCap, dstTopCap,
-                       (Vector2){0,0}, 0.0f, WHITE);
+        // Draw top pipe cap (using normal source)
+        Rectangle dstTopCap = { p->top.x, p->top.y + topBodyHeight, PIPE_WIDTH, PIPE_CAP_HEIGHT };
+        DrawTexturePro(game->texPipe, srcCap, dstTopCap, (Vector2){0,0}, 0.0f, WHITE);
 
-        // ---------- BOTTOM PIPE ----------
+
+        // ---------- BOTTOM PIPE (FLIPPED) ----------
         float bottomBodyHeight = p->bottom.height - PIPE_CAP_HEIGHT;
         if (bottomBodyHeight < 0) bottomBodyHeight = 0;
-
-        Rectangle dstBottomBody = {
-            p->bottom.x,
-            p->bottom.y + PIPE_CAP_HEIGHT,
-            PIPE_WIDTH,
-            bottomBodyHeight
-        };
-        DrawTexturePro(game->texPipe, srcBody, dstBottomBody,
-                       (Vector2){0,0}, 0.0f, WHITE);
 
         Rectangle dstBottomCap = {
             p->bottom.x,
@@ -231,8 +216,16 @@ void DrawGame(const Game *game) {
             PIPE_WIDTH,
             PIPE_CAP_HEIGHT
         };
-        DrawTexturePro(game->texPipe, srcCap, dstBottomCap,
-                       (Vector2){0,0}, 0.0f, WHITE);
+        DrawTexturePro(game->texPipe, srcCapFlipped, dstBottomCap, (Vector2){0,0}, 0.0f, WHITE);
+
+
+        Rectangle dstBottomBody = {
+            p->bottom.x,
+            p->bottom.y + PIPE_CAP_HEIGHT,
+            PIPE_WIDTH,
+            bottomBodyHeight
+        };
+        DrawTexturePro(game->texPipe, srcBodyFlipped, dstBottomBody, (Vector2){0,0}, 0.0f, WHITE);
     }
 
     // Bird
@@ -246,74 +239,68 @@ void DrawGame(const Game *game) {
     // Score text (with shadow)
     int fontSizeScore = 32;
     Vector2 posScore = { 20, 20 };
-
     const char *scoreStr = TextFormat("SCORE: %d", game->score);
-    DrawTextEx(game->font, scoreStr,
-               (Vector2){ posScore.x + shadowOffset.x,
-                          posScore.y + shadowOffset.y },
-               fontSizeScore, 2, shadow);
-    DrawTextEx(game->font, scoreStr,
-               posScore, fontSizeScore, 2, uiColor);
+    
+    DrawTextEx(game->font, scoreStr, (Vector2){ posScore.x + shadowOffset.x, posScore.y + shadowOffset.y }, fontSizeScore, 2, shadow);
+    DrawTextEx(game->font, scoreStr, posScore, fontSizeScore, 2, uiColor);
 
     int fontSizeBest = 20;
     Vector2 posBest = { 20, 60 };
     const char *bestStr = TextFormat("BEST: %d", game->highScore);
-    DrawTextEx(game->font, bestStr,
-               (Vector2){ posBest.x + shadowOffset.x,
-                          posBest.y + shadowOffset.y },
-               fontSizeBest, 2, shadow);
-    DrawTextEx(game->font, bestStr,
-               posBest, fontSizeBest, 2, uiColor);
+    
+    DrawTextEx(game->font, bestStr, (Vector2){ posBest.x + shadowOffset.x, posBest.y + shadowOffset.y }, fontSizeBest, 2, shadow);
+    DrawTextEx(game->font, bestStr, posBest, fontSizeBest, 2, uiColor);
 
-    // Waiting hint
+    // Waiting hint (centered)
     if (game->state == GAME_WAITING) {
         const char *hint = "Press SPACE or Left Click";
         int fontSize = 24;
+        
+        // Measure text logic fixed
         Vector2 textSize = MeasureTextEx(game->font, hint, fontSize, 2);
+        if (textSize.x == 0) textSize = MeasureTextEx(GetFontDefault(), hint, fontSize, 2); // Safety fallback
+
         Vector2 center = {
-            SCREEN_WIDTH / 2.0f - textSize.x / 2.0f,
-            SCREEN_HEIGHT / 2.0f
+            GetScreenWidth() / 2.0f - textSize.x / 2.0f,
+            GetScreenHeight() / 2.0f
         };
 
-        DrawTextEx(game->font, hint,
-                   (Vector2){ center.x + shadowOffset.x,
-                              center.y + shadowOffset.y },
-                   fontSize, 2, shadow);
-        DrawTextEx(game->font, hint,
-                   center,
-                   fontSize, 2, uiColor);
+        DrawTextEx(game->font, hint, (Vector2){ center.x + shadowOffset.x, center.y + shadowOffset.y }, fontSize, 2, shadow);
+        DrawTextEx(game->font, hint, center, fontSize, 2, uiColor);
     }
 
-    // Game over overlay
+    // Game over overlay (Centered Text Fix Applied)
     if (game->state == GAME_OVER) {
-        DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, 0.5f));
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.5f));
 
         const char *msg = "GAME OVER";
         int fontSize = 48;
+        
+        // --- FIX: Ensure we get a valid width ---
         Vector2 msgSize = MeasureTextEx(game->font, msg, fontSize, 2);
+        if (msgSize.x == 0) msgSize = MeasureTextEx(GetFontDefault(), msg, fontSize, 2);
+
         Vector2 msgPos = {
-            SCREEN_WIDTH / 2.0f - msgSize.x / 2.0f,
-            SCREEN_HEIGHT / 2.0f - 60.0f
+            GetScreenWidth() / 2.0f - msgSize.x / 2.0f,
+            GetScreenHeight() / 2.0f - 60.0f
         };
 
-        DrawTextEx(game->font, msg,
-                   (Vector2){ msgPos.x + 2, msgPos.y + 2 },
-                   fontSize, 2, shadow);
-        DrawTextEx(game->font, msg,
-                   msgPos, fontSize, 2, uiColor);
+        DrawTextEx(game->font, msg, (Vector2){ msgPos.x + 2, msgPos.y + 2 }, fontSize, 2, shadow);
+        DrawTextEx(game->font, msg, msgPos, fontSize, 2, uiColor);
 
         const char *hint = "Press SPACE or Left Click to restart";
         int hintSize = 20;
+        
+        // --- FIX: Ensure we get a valid width ---
         Vector2 hintDim = MeasureTextEx(game->font, hint, hintSize, 2);
+        if (hintDim.x == 0) hintDim = MeasureTextEx(GetFontDefault(), hint, hintSize, 2);
+
         Vector2 hintPos = {
-            SCREEN_WIDTH / 2.0f - hintDim.x / 2.0f,
-            SCREEN_HEIGHT / 2.0f + 10.0f
+            GetScreenWidth() / 2.0f - hintDim.x / 2.0f,
+            GetScreenHeight() / 2.0f + 10.0f
         };
 
-        DrawTextEx(game->font, hint,
-                   (Vector2){ hintPos.x + 2, hintPos.y + 2 },
-                   hintSize, 2, shadow);
-        DrawTextEx(game->font, hint,
-                   hintPos, hintSize, 2, uiColor);
+        DrawTextEx(game->font, hint, (Vector2){ hintPos.x + 2, hintPos.y + 2 }, hintSize, 2, shadow);
+        DrawTextEx(game->font, hint, hintPos, hintSize, 2, uiColor);
     }
 }
