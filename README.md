@@ -79,8 +79,10 @@ On Linux/macOS, link against `raylib` and the appropriate system libraries as de
 
 3. **Run the game**
 
+```
 ./FlappyBird.exe # Windows
 ./FlappyBird # Linux/macOS (name depends on your build)
+```
 
 ---
 
