@@ -23,7 +23,8 @@ typedef enum GameState {
     GAME_RUNNING,
     GAME_OVER,
     GAME_PAUSED,
-    GAME_SETTINGS
+    GAME_SETTINGS,
+    GAME_RESPAWN_COUNTDOWN
 } GameState;
 
 // --- STRUCTURES ---
@@ -66,6 +67,9 @@ typedef struct Game {
     float shakeTimer;
     float shakeMagnitude;
     Vector2 shakeOffset;
+    
+    // Respawn countdown
+    float respawnTimer;
     
     // Settings
     Settings settings;

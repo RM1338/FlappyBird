@@ -1,9 +1,14 @@
+// main.c
+
 #include "raylib.h"
 #include "game.h"
 
 int main(void) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Flappy Bird");
     SetTargetFPS(60);
+    
+    // Disable ESC key to close window - we handle ESC ourselves
+    SetExitKey(KEY_NULL);
 
     Game game;
     InitGame(&game);
@@ -11,7 +16,7 @@ int main(void) {
     while (!WindowShouldClose()) {
         float dt = GetFrameTime();
 
-        // Always call UpdateGame – it handles WAITING/RUNNING/OVER
+        // Always call UpdateGame – it handles WAITING/RUNNING/OVER/PAUSED/SETTINGS
         UpdateGame(&game, dt);
 
         BeginDrawing();
