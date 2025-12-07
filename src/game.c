@@ -3,17 +3,20 @@
 #include <stdlib.h>
 #include <time.h>
 
+// --- NEW CONSTANT FOR SAFETY ---
+#define PIPE_CAPACITY 16
+
 #define PIPE_CAP_HEIGHT 24   // pixels from top of pipe.png used as cap
 
 // Assets
 static void InitAssets(Game *game) {
     game->texBird = LoadTexture("assets/bird.png");
-    game->texPipe = LoadTexture("assets/pipe.png");   // 80 x 217, cap at top
+    game->texPipe = LoadTexture("assets/pipe.png");    // 80 x 217, cap at top
     game->texBg   = LoadTexture("assets/bg.png");
 
     InitAudioDevice();
     game->sFlap  = LoadSound("assets/sounds/flap.wav");
-    game->sScore = LoadSound("assets/sounds/score.wav");
+    game->sScore = LoadSound("assets/sounds/score.wav"); // Assuming this is correct now, if it's 'point.wav' change the filename here
     game->sHit   = LoadSound("assets/sounds/hit.wav");
 
     // Pixel font similar to Flappy Bird (place as assets/font.ttf)
@@ -47,7 +50,8 @@ void InitGame(Game *game) {
     InitAssets(game);
     InitBird(&game->bird);
 
-    for (int i = 0; i < 16; i++) {
+    // Use PIPE_CAPACITY
+    for (int i = 0; i < PIPE_CAPACITY; i++) {
         game->pipes[i].active = false;
         game->pipes[i].scored = false;
     }
@@ -56,13 +60,14 @@ void InitGame(Game *game) {
 }
 
 void ResetGame(Game *game) {
-    game->state = GAME_RUNNING;        // restart directly into gameplay
+    game->state = GAME_RUNNING;         // restart directly into gameplay
     game->score = 0;
     game->pipeSpawnTimer = 0.0f;
     game->pipeCount = 0;
 
     InitBird(&game->bird);
-    for (int i = 0; i < 16; i++) {
+    // Use PIPE_CAPACITY
+    for (int i = 0; i < PIPE_CAPACITY; i++) {
         game->pipes[i].active = false;
         game->pipes[i].scored = false;
     }
@@ -78,8 +83,9 @@ void SpawnPipe(Game *game) {
     Pipe *pipe = NULL;
     int foundIndex = -1;
     
-    for (int i = 0; i < 16; i++) {
-        int checkIndex = (game->pipeCount + i) % 16;
+    // Use PIPE_CAPACITY
+    for (int i = 0; i < PIPE_CAPACITY; i++) {
+        int checkIndex = (game->pipeCount + i) % PIPE_CAPACITY;
         
         if (!game->pipes[checkIndex].active) {
             pipe = &game->pipes[checkIndex];
@@ -89,12 +95,12 @@ void SpawnPipe(Game *game) {
     }
 
     if (pipe == NULL) {
-        int overwriteIndex = game->pipeCount % 16;
+        int overwriteIndex = game->pipeCount % PIPE_CAPACITY;
         pipe = &game->pipes[overwriteIndex];
         foundIndex = overwriteIndex;
     }
 
-    game->pipeCount = (foundIndex + 1) % 16; 
+    game->pipeCount = (foundIndex + 1) % PIPE_CAPACITY; 
     
     int gapSize = MIN_GAP_SIZE + rand() % (MAX_GAP_SIZE - MIN_GAP_SIZE + 1);
     int minY = 60;
@@ -150,7 +156,8 @@ void UpdateGame(Game *game, float dt) {
 
     Rectangle birdRect = BirdGetRect(&game->bird);
 
-    for (int i = 0; i < game->pipeCount; i++) {
+    // Loop over the ENTIRE capacity, not just game->pipeCount
+    for (int i = 0; i < PIPE_CAPACITY; i++) {
         Pipe *p = &game->pipes[i];
         if (!p->active) continue;
 
@@ -191,7 +198,7 @@ void DrawGame(const Game *game) {
     // Background
     DrawTexture(game->texBg, 0, 0, WHITE);
 
-    Rectangle srcCap  = { 0, 0, PIPE_WIDTH, PIPE_CAP_HEIGHT }; 
+    Rectangle srcCap    = { 0, 0, PIPE_WIDTH, PIPE_CAP_HEIGHT }; 
     Rectangle srcBody = {
         0,
         PIPE_CAP_HEIGHT,
@@ -206,7 +213,8 @@ void DrawGame(const Game *game) {
 
 
     // Pipes
-    for (int i = 0; i < game->pipeCount; i++) {
+    // Loop over the ENTIRE capacity to ensure all active pipes are drawn
+    for (int i = 0; i < PIPE_CAPACITY; i++) {
         const Pipe *p = &game->pipes[i];
         if (!p->active) continue;
 
@@ -248,7 +256,7 @@ void DrawGame(const Game *game) {
     DrawBirdSprite(game);
 
     // Colors for text
-    Color uiColor = (Color){ 255, 230, 0, 255 };   // bright yellow
+    Color uiColor = (Color){ 255, 230, 0, 255 };    // bright yellow
     Color shadow  = (Color){ 0, 0, 0, 160 };
     Vector2 shadowOffset = { 2, 2 };
 
