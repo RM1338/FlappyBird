@@ -355,25 +355,76 @@ void UpdateGame(Game *game, float dt) {
 
 // --- DRAWING HELPERS ---
 static void DrawLives(const Game *game) {
-    Color heartColor = RED;
-    int heartSize = 20;
-    int spacing = 30;
-    int startX = SCREEN_WIDTH - (MAX_LIVES * spacing) - 10;
-    int startY = 10;
+    Color heartRed = RED;
+    Color heartBlack = BLACK;
+    Color emptyGrey = (Color){ 100, 100, 100, 255 };
+    Color emptyDarkGrey = (Color){ 50, 50, 50, 255 };
+    
+    int pixelSize = 2; // Size of each "pixel" in the heart
+    int spacing = 40;
+    int startX = SCREEN_WIDTH - (MAX_LIVES * spacing) - 15;
+    int startY = 15;
+    
+    // Pixel heart pattern (16x14 grid)
+    // 1 = filled, 0 = empty
+    int heart[14][16] = {
+        {0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0},
+        {0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0},
+        {1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+        {0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+        {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0},
+        {0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0},
+        {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
+        {0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0},
+        {0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };
     
     for (int i = 0; i < MAX_LIVES; i++) {
-        Color color = (i < game->lives) ? heartColor : GRAY;
-        int x = startX + (i * spacing);
+        int baseX = startX + (i * spacing);
+        int baseY = startY;
         
-        // Draw simple heart shape using triangles
-        DrawCircle(x, startY + 5, 8, color);
-        DrawCircle(x + 12, startY + 5, 8, color);
-        DrawTriangle(
-            (Vector2){x - 8, startY + 5},
-            (Vector2){x + 20, startY + 5},
-            (Vector2){x + 6, startY + 22},
-            color
-        );
+        Color fillColor = (i < game->lives) ? heartRed : emptyGrey;
+        Color outlineColor = (i < game->lives) ? heartBlack : emptyDarkGrey;
+        
+        // Draw the pixel heart
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 16; col++) {
+                if (heart[row][col] == 1) {
+                    int x = baseX + col * pixelSize;
+                    int y = baseY + row * pixelSize;
+                    DrawRectangle(x, y, pixelSize, pixelSize, fillColor);
+                }
+            }
+        }
+        
+        // Draw pixel outline/border for that retro look
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 16; col++) {
+                if (heart[row][col] == 1) {
+                    int x = baseX + col * pixelSize;
+                    int y = baseY + row * pixelSize;
+                    
+                    // Check if this pixel is on the edge
+                    bool isEdge = false;
+                    
+                    // Check all 4 directions
+                    if (row == 0 || heart[row-1][col] == 0) isEdge = true; // top
+                    if (row == 13 || heart[row+1][col] == 0) isEdge = true; // bottom
+                    if (col == 0 || heart[row][col-1] == 0) isEdge = true; // left
+                    if (col == 15 || heart[row][col+1] == 0) isEdge = true; // right
+                    
+                    if (isEdge) {
+                        // Draw thin outline
+                        DrawRectangleLines(x, y, pixelSize, pixelSize, outlineColor);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -476,7 +527,8 @@ static void DrawWaitingScreen(const Game *game) {
         
         Vector2 settingsDim = MeasureTextEx(game->font, settings, 20.0f, hintSpacing);
         float settingsX = (SCREEN_WIDTH - settingsDim.x) / 2.0f;
-        DrawTextEx(game->font, settings, (Vector2){ settingsX, hintY + 40 }, 20.0f, hintSpacing, GRAY);
+        DrawTextEx(game->font, settings, (Vector2){ settingsX + 1, hintY + 41 }, 20.0f, hintSpacing, (Color){40, 40, 40, 255});
+        DrawTextEx(game->font, settings, (Vector2){ settingsX, hintY + 40 }, 20.0f, hintSpacing, (Color){200, 200, 200, 255});
     } else {
         int hintWidth = MeasureText(hint, (int)hintSize);
         hintX = (SCREEN_WIDTH - hintWidth) / 2.0f;
@@ -487,7 +539,8 @@ static void DrawWaitingScreen(const Game *game) {
         
         int settingsWidth = MeasureText(settings, 20);
         int settingsX = (SCREEN_WIDTH - settingsWidth) / 2;
-        DrawText(settings, settingsX, (int)hintY + 40, 20, GRAY);
+        DrawText(settings, settingsX + 1, (int)hintY + 41, 20, (Color){40, 40, 40, 255});
+        DrawText(settings, settingsX, (int)hintY + 40, 20, (Color){200, 200, 200, 255});
     }
 }
 
@@ -539,7 +592,8 @@ static void DrawGameOverScreen(const Game *game) {
         
         Vector2 menuDim = MeasureTextEx(game->font, menu, 20.0f, hintSpacing);
         float menuX = (SCREEN_WIDTH - menuDim.x) / 2.0f;
-        DrawTextEx(game->font, menu, (Vector2){ menuX, hintY + 40 }, 20.0f, hintSpacing, GRAY);
+        DrawTextEx(game->font, menu, (Vector2){ menuX + 1, hintY + 41 }, 20.0f, hintSpacing, (Color){40, 40, 40, 255});
+        DrawTextEx(game->font, menu, (Vector2){ menuX, hintY + 40 }, 20.0f, hintSpacing, (Color){200, 200, 200, 255});
     } else {
         int hintWidth = MeasureText(hint, (int)hintSize);
         hintX = (SCREEN_WIDTH - hintWidth) / 2.0f;
@@ -550,7 +604,8 @@ static void DrawGameOverScreen(const Game *game) {
         
         int menuWidth = MeasureText(menu, 20);
         int menuX = (SCREEN_WIDTH - menuWidth) / 2;
-        DrawText(menu, menuX, (int)hintY + 40, 20, GRAY);
+        DrawText(menu, menuX + 1, (int)hintY + 41, 20, (Color){40, 40, 40, 255});
+        DrawText(menu, menuX, (int)hintY + 40, 20, (Color){200, 200, 200, 255});
     }
 }
 
@@ -559,6 +614,8 @@ static void DrawPauseScreen(const Game *game) {
     
     bool useCustomFont = (game->font.texture.id > 0);
     Color yellow = (Color){ 255, 230, 0, 255 };
+    Color lightGrey = (Color){ 200, 200, 200, 255 };
+    Color darkShadow = (Color){ 40, 40, 40, 255 };
     
     const char *title = "PAUSED";
     const char *resume = "Press ESC or P to Resume";
@@ -575,7 +632,8 @@ static void DrawPauseScreen(const Game *game) {
         
         Vector2 settingsDim = MeasureTextEx(game->font, settings, 20.0f, 2.0f);
         float settingsX = (SCREEN_WIDTH - settingsDim.x) / 2.0f;
-        DrawTextEx(game->font, settings, (Vector2){ settingsX, SCREEN_HEIGHT / 2.0f + 60 }, 20.0f, 2.0f, GRAY);
+        DrawTextEx(game->font, settings, (Vector2){ settingsX + 1, SCREEN_HEIGHT / 2.0f + 61 }, 20.0f, 2.0f, darkShadow);
+        DrawTextEx(game->font, settings, (Vector2){ settingsX, SCREEN_HEIGHT / 2.0f + 60 }, 20.0f, 2.0f, lightGrey);
     } else {
         int titleWidth = MeasureText(title, 48);
         DrawText(title, (SCREEN_WIDTH - titleWidth) / 2, SCREEN_HEIGHT / 2 - 50, 48, yellow);
@@ -584,7 +642,8 @@ static void DrawPauseScreen(const Game *game) {
         DrawText(resume, (SCREEN_WIDTH - resumeWidth) / 2, SCREEN_HEIGHT / 2 + 20, 24, WHITE);
         
         int settingsWidth = MeasureText(settings, 20);
-        DrawText(settings, (SCREEN_WIDTH - settingsWidth) / 2, SCREEN_HEIGHT / 2 + 60, 20, GRAY);
+        DrawText(settings, (SCREEN_WIDTH - settingsWidth) / 2 + 1, SCREEN_HEIGHT / 2 + 61, 20, darkShadow);
+        DrawText(settings, (SCREEN_WIDTH - settingsWidth) / 2, SCREEN_HEIGHT / 2 + 60, 20, lightGrey);
     }
 }
 
@@ -593,6 +652,8 @@ static void DrawSettingsScreen(const Game *game) {
     
     bool useCustomFont = (game->font.texture.id > 0);
     Color yellow = (Color){ 255, 230, 0, 255 };
+    Color lightGrey = (Color){ 200, 200, 200, 255 };
+    Color darkShadow = (Color){ 40, 40, 40, 255 };
     
     const char *title = "SETTINGS";
     const char *volumeText = TextFormat("SFX Volume: %.0f%%", game->settings.sfxVolume * 100);
@@ -611,8 +672,11 @@ static void DrawSettingsScreen(const Game *game) {
         DrawTextEx(game->font, volumeText, (Vector2){ 100, yPos }, 24.0f, 2.0f, WHITE);
         DrawTextEx(game->font, shakeText, (Vector2){ 100, yPos + 50 }, 24.0f, 2.0f, WHITE);
         
-        DrawTextEx(game->font, controls1, (Vector2){ 100, yPos + 120 }, 18.0f, 2.0f, GRAY);
-        DrawTextEx(game->font, controls2, (Vector2){ 100, yPos + 150 }, 18.0f, 2.0f, GRAY);
+        DrawTextEx(game->font, controls1, (Vector2){ 101, yPos + 121 }, 18.0f, 2.0f, darkShadow);
+        DrawTextEx(game->font, controls1, (Vector2){ 100, yPos + 120 }, 18.0f, 2.0f, lightGrey);
+        
+        DrawTextEx(game->font, controls2, (Vector2){ 101, yPos + 151 }, 18.0f, 2.0f, darkShadow);
+        DrawTextEx(game->font, controls2, (Vector2){ 100, yPos + 150 }, 18.0f, 2.0f, lightGrey);
         
         Vector2 backDim = MeasureTextEx(game->font, back, 20.0f, 2.0f);
         float backX = (SCREEN_WIDTH - backDim.x) / 2.0f;
@@ -624,8 +688,11 @@ static void DrawSettingsScreen(const Game *game) {
         DrawText(volumeText, 100, yPos, 24, WHITE);
         DrawText(shakeText, 100, yPos + 50, 24, WHITE);
         
-        DrawText(controls1, 100, yPos + 120, 18, GRAY);
-        DrawText(controls2, 100, yPos + 150, 18, GRAY);
+        DrawText(controls1, 101, yPos + 121, 18, darkShadow);
+        DrawText(controls1, 100, yPos + 120, 18, lightGrey);
+        
+        DrawText(controls2, 101, yPos + 151, 18, darkShadow);
+        DrawText(controls2, 100, yPos + 150, 18, lightGrey);
         
         int backWidth = MeasureText(back, 20);
         DrawText(back, (SCREEN_WIDTH - backWidth) / 2, SCREEN_HEIGHT - 80, 20, YELLOW);
