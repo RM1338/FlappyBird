@@ -15,11 +15,15 @@
 #define MIN_GAP_SIZE    100
 #define MAX_GAP_SIZE    160
 
+#define MAX_LIVES       3
+
 // --- ENUMS ---
 typedef enum GameState {
     GAME_WAITING,
     GAME_RUNNING,
-    GAME_OVER
+    GAME_OVER,
+    GAME_PAUSED,
+    GAME_SETTINGS
 } GameState;
 
 // --- STRUCTURES ---
@@ -30,10 +34,17 @@ typedef struct Pipe {
     bool scored;
 } Pipe;
 
+typedef struct Settings {
+    float musicVolume;
+    float sfxVolume;
+    bool screenShake;
+} Settings;
+
 typedef struct Game {
     GameState state;
     int score;
     int highScore;
+    int lives;
 
     Bird bird;
 
@@ -50,6 +61,14 @@ typedef struct Game {
     Sound sHit;
 
     Font font;
+    
+    // Screen shake
+    float shakeTimer;
+    float shakeMagnitude;
+    Vector2 shakeOffset;
+    
+    // Settings
+    Settings settings;
 } Game;
 
 // --- FUNCTION PROTOTYPES ---
@@ -59,5 +78,13 @@ void DrawGame(const Game *game);
 void UnloadGame(Game *game);
 void ResetGame(Game *game);
 void SpawnPipe(Game *game);
+
+// Screen shake
+void ApplyScreenShake(Game *game, float magnitude, float duration);
+void UpdateScreenShake(Game *game, float dt);
+
+// Settings
+void SaveSettings(const Settings *settings);
+void LoadSettings(Settings *settings);
 
 #endif // GAME_H
