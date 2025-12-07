@@ -1,31 +1,41 @@
 #include "player.h"
+#include "game.h"
 
-#define BIRD_WIDTH 27
-#define BIRD_HEIGHT 20
+// --- BIRD FUNCTIONS ---
 
 void InitBird(Bird *bird) {
     bird->position = (Vector2){ 100.0f, SCREEN_HEIGHT / 2.0f };
-    bird->size = (Vector2){ BIRD_WIDTH, BIRD_HEIGHT };
+    bird->size     = (Vector2){ BIRD_WIDTH, BIRD_HEIGHT };  // e.g. 27x20 or 34x24
     bird->velocity = 0.0f;
     bird->acceleration = GRAVITY;
+    bird->rotation = 0.0f;
     bird->frame = 0;
     bird->frameTimer = 0.0f;
 }
 
 void UpdateBird(Bird *bird, float dt) {
+    // Gravity
     bird->velocity += bird->acceleration * dt;
     if (bird->velocity > 350.0f) bird->velocity = 350.0f;
 
+    // Position
     bird->position.y += bird->velocity * dt;
 
-    if (bird->position.y < 0.0f) {
-        bird->position.y = 0.0f;
+    // Tilt based on velocity
+    bird->rotation = bird->velocity * 0.06f;
+    if (bird->rotation > 70.0f)  bird->rotation = 70.0f;
+    if (bird->rotation < -45.0f) bird->rotation = -45.0f;
+
+    // Prevent going off the top
+    if (bird->position.y - bird->size.y * 0.5f < 0.0f) {
+        bird->position.y = bird->size.y * 0.5f;
         bird->velocity = 0.0f;
     }
 }
 
 void BirdFlap(Bird *bird) {
     bird->velocity = FLAP_STRENGTH;
+    bird->rotation = -45.0f;
 }
 
 bool BirdHitWorld(const Bird *bird) {
@@ -44,18 +54,18 @@ Rectangle BirdGetRect(const Bird *bird) {
     };
 }
 
+// Draw using ENTIRE bird.png as a single frame (no sprite sheet)
 void DrawBirdSprite(const Game *game) {
     const Bird *bird = &game->bird;
 
-    // Use full 27x20 bird.png
-    Rectangle src = {
+    Rectangle sourceRec = {
         0.0f,
         0.0f,
         (float)game->texBird.width,
         (float)game->texBird.height
     };
 
-    Rectangle dst = {
+    Rectangle destRec = {
         bird->position.x,
         bird->position.y,
         bird->size.x,
@@ -63,10 +73,14 @@ void DrawBirdSprite(const Game *game) {
     };
 
     Vector2 origin = { bird->size.x * 0.5f, bird->size.y * 0.5f };
+    float angle = bird->rotation;
 
-    float angle = bird->velocity * 0.06f;
-    if (angle > 30.0f) angle = 30.0f;
-    if (angle < -30.0f) angle = -30.0f;
-
-    DrawTexturePro(game->texBird, src, dst, origin, angle, WHITE);
+    DrawTexturePro(
+        game->texBird,
+        sourceRec,
+        destRec,
+        origin,
+        angle,
+        WHITE
+    );
 }
