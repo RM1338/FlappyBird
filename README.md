@@ -2,7 +2,7 @@
 
 **Flappy Bird Clone** is a small, arcade‑style game built in C with the raylib library. The game recreates the classic Flappy Bird feel with pixel‑art graphics, smooth tap‑to‑flap controls, capped pipes, and a retro arcade font, making it a great learning project for 2D game development with C and raylib. [web:141]
 
-![Flappy Bird Banner](./githubAssets/banner.jpg)
+![Flappy Bird Banner](./githubAssets/banner.png)
 
 ---
 
