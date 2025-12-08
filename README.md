@@ -24,11 +24,9 @@
   
 | Main Menu | Gameplay | Game Over |
 |:---------:|:--------:|:---------:|
-| ![Menu](https://via.placeholder.com/250x200/1e90ff/ffffff?text=Main+Menu) | ![Gameplay](https://via.placeholder.com/250x200/87ceeb/ffffff?text=Gameplay) | ![Game Over](https://via.placeholder.com/250x200/ff6347/ffffff?text=Game+Over) |
+| ![Menu](./githubAssets/MainMenu.png) | ![Gameplay](./githubAssets/GameDemo.mp4) | ![Game Over](./githubAssets/GaveOver.png) |
 
 </div>
-
-> **Note:** Replace the placeholder images above with your actual game screenshots!
 
 ## ✨ Features
 
