@@ -21,10 +21,16 @@
 ## 📸 Demo
 
 <div align="center">
+
+### Main Menu & Game Over
   
-| Main Menu | Gameplay | Game Over |
-|:---------:|:--------:|:---------:|
-| ![Menu](./githubAssets/MainMenu.png) | ![Gameplay](./githubAssets/GameDemo.gif) | ![Game Over](./githubAssets/GaveOver.png) |
+| Main Menu | Game Over |
+|:---------:|:---------:|
+| ![Menu](./githubAssets/MainMenu.png) | ![Game Over](./githubAssets/GameOver.png) |
+
+### Gameplay in Action
+
+![Gameplay](./githubAssets/GameDemo.gif)
 
 </div>
 
@@ -83,8 +89,8 @@
 #### Linux/macOS
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/flappy-bird-c.git
-cd flappy-bird-c
+git clone https://github.com/RM1338/FlappyBird.git
+cd FlappyBird
 
 # Install Raylib (if not already installed)
 # On Ubuntu/Debian:
@@ -103,8 +109,8 @@ gcc src/*.c -o flappy_bird -lraylib -lm
 #### Windows
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/flappy-bird-c.git
-cd flappy-bird-c
+git clone https://github.com/RM1338/FlappyBird.git
+cd FlappyBird
 
 # Compile (using MinGW)
 gcc src/*.c -o flappy_bird.exe -lraylib -lopengl32 -lgdi32 -lwinmm
@@ -135,6 +141,11 @@ FlappyBird/
 │   ├── game.c              # Core game logic
 │   ├── player.h            # Bird/player API
 │   └── player.c            # Bird physics & rendering
+├── githubAssets/
+│   ├── banner.png          # README banner
+│   ├── MainMenu.png        # Menu screenshot
+│   ├── GameOver.png        # Game over screenshot
+│   └── GameDemo.gif        # Gameplay GIF
 ├── settings.dat            # Saved settings (auto-generated)
 └── README.md
 ```
