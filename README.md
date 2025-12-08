@@ -24,7 +24,7 @@
   
 | Main Menu | Gameplay | Game Over |
 |:---------:|:--------:|:---------:|
-| ![Menu](./githubAssets/MainMenu.png) | ![Gameplay](./githubAssets/GameDemo.mp4) | ![Game Over](./githubAssets/GaveOver.png) |
+| ![Menu](./githubAssets/MainMenu.png) | ![Gameplay](./githubAssets/GameDemo.gif) | ![Game Over](./githubAssets/GaveOver.png) |
 
 </div>
 
