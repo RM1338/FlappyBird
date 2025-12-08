@@ -1,147 +1,197 @@
-# Flappy Bird Clone 🐤🎮
+# 🐦 Flappy Bird - C Game Clone
 
-**Flappy Bird Clone** is a small, arcade‑style game built in C with the raylib library. The game recreates the classic Flappy Bird feel with pixel‑art graphics, smooth tap‑to‑flap controls, capped pipes, and a retro arcade font, making it a great learning project for 2D game development with C and raylib. [web:141]
+<div align="center">
+  
+![Flappy Bird](https://img.shields.io/badge/Flappy%20Bird-Game-yellow?style=for-the-badge&logo=gamepad)
+![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
+![Raylib](https://img.shields.io/badge/Raylib-Framework-red?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
 
-![Flappy Bird Banner](./githubAssets/banner.png)
+**A modern recreation of the classic Flappy Bird game, built from scratch in C using the Raylib framework.**
 
----
-
-## 🌟 Features
-
-- **Classic Flappy Gameplay** – Tap to keep the bird in the air and fly through pipe gaps. [image:1]  
-- **Smooth Start & Restart Flow** – Game waits for your first tap, then instantly restarts after each game over. [web:141]  
-- **Pixel‑Perfect Pipes** – Custom 80×217 pipe texture with clean caps at the openings. [image:1]  
-- **Retro UI** – Score and messages rendered with a pixel/arcade font for an old‑school vibe. [web:145]  
-- **Simple State System** – `GAME_WAITING`, `GAME_RUNNING`, and `GAME_OVER` states keep logic clean. [web:141]  
-- **Configurable Difficulty** – Pipe speed, spawn time, and gap size are all tunable constants. [web:141]
+[Features](#-features) • [Demo](#-demo) • [Installation](#-installation) • [Controls](#-controls) • [Project Structure](#-project-structure)
 
 ---
 
-## 🚀 Technologies Used
+</div>
 
-- **C (ISO C99)** – Core game logic, physics, and state management. [web:141]  
-- **raylib** – Lightweight C library for 2D rendering, input, textures, and audio. [web:141]  
-- **Pixel Art Assets** – Bird, background, and pipe sprites drawn as simple pixel art. [image:1]  
-- **Wave Audio** – `flap.wav`, `score.wav`, and `hit.wav` for feedback on game events. [web:141]
+## 📸 Demo
 
----
+<div align="center">
+  
+| Main Menu | Gameplay | Game Over |
+|:---------:|:--------:|:---------:|
+| ![Menu](https://via.placeholder.com/250x200/1e90ff/ffffff?text=Main+Menu) | ![Gameplay](https://via.placeholder.com/250x200/87ceeb/ffffff?text=Gameplay) | ![Game Over](https://via.placeholder.com/250x200/ff6347/ffffff?text=Game+Over) |
+
+</div>
+
+> **Note:** Replace the placeholder images above with your actual game screenshots!
+
+## ✨ Features
+
+### 🎮 Core Gameplay
+- **Smooth Physics** - Realistic gravity and flapping mechanics
+- **Procedural Generation** - Randomly generated pipes for endless gameplay
+- **Score Tracking** - Keep track of your best score across sessions
+- **Collision Detection** - Precise hit detection system
+
+### 💖 Life System
+- **3 Lives** - Get three chances before game over
+- **Respawn Countdown** - 3-second countdown timer after losing a life
+- **Pixel Art Hearts** - Retro-style heart indicators
+
+### 🎨 Visual Polish
+- **Screen Shake** - Impact feedback on collisions
+- **Pixel Art Graphics** - Authentic retro aesthetic
+- **Custom Fonts** - Supports custom TTF fonts for UI
+- **Smooth Animations** - Fluid bird movement and rotation
+
+### ⚙️ Settings & Controls
+- **Pause Menu** - Pause anytime during gameplay (ESC or P)
+- **Volume Control** - Adjust sound effects volume
+- **Screen Shake Toggle** - Enable/disable screen shake effect
+- **Persistent Settings** - Settings saved between game sessions
+
+### 🔊 Audio
+- **Sound Effects**
+  - Wing flap sound
+  - Point scoring sound
+  - Collision/hit sound
+- **Volume Controls** - Adjustable SFX volume
+
+## 🎯 Controls
+
+| Action | Key |
+|--------|-----|
+| **Flap / Start** | `SPACE` or `LEFT CLICK` |
+| **Pause / Resume** | `ESC` or `P` |
+| **Settings** | `ESC` (from menu) or `S` (from pause) |
+| **Volume Up** | `UP ARROW` (in settings) |
+| **Volume Down** | `DOWN ARROW` (in settings) |
+| **Toggle Screen Shake** | `T` (in settings) |
+
+## 🛠️ Installation
+
+### Prerequisites
+- **C Compiler** (GCC, Clang, MSVC)
+- **Raylib** (5.0 or higher)
+- **Make** (optional, for building)
+
+### Building from Source
+
+#### Linux/macOS
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/flappy-bird-c.git
+cd flappy-bird-c
+
+# Install Raylib (if not already installed)
+# On Ubuntu/Debian:
+sudo apt-get install libraylib-dev
+
+# On macOS (using Homebrew):
+brew install raylib
+
+# Compile
+gcc src/*.c -o flappy_bird -lraylib -lm
+
+# Run
+./flappy_bird
+```
+
+#### Windows
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/flappy-bird-c.git
+cd flappy-bird-c
+
+# Compile (using MinGW)
+gcc src/*.c -o flappy_bird.exe -lraylib -lopengl32 -lgdi32 -lwinmm
+
+# Run
+flappy_bird.exe
+```
+
+### Download Pre-built Binaries
+Check the [Releases](https://github.com/RM1338/FlappyBird/releases) page for pre-compiled binaries.
 
 ## 📁 Project Structure
 
 ```
-FlappyBird/  
-├── assets/  
-│ ├── bg.png # Background (800x600)  
-│ ├── bird.png # Bird sprite (27x20)  
-│ ├── pipe.png # Pipe sprite (80x217, cap at top)  
-│ ├── font.ttf # Pixel / arcade font  
-│ └── sounds/  
-│ ├── flap.wav  
-│ ├── score.wav  
-│ └── hit.wav  
-└── src/  
-├── main.c (Window + game loop)  
-├── game.h (Game structs, constants, and API)  
-├── game.c (Game logic, pipes, states, drawing)  
-├── player.h (Bird API)  
-└── player.c (Bird physics and rendering)  
+FlappyBird/
+├── assets/
+│   ├── bg.png              # Background image (800x600)
+│   ├── bird.png            # Bird sprite (27x20)
+│   ├── pipe.png            # Pipe texture (80x217)
+│   ├── font.ttf            # Custom pixel font
+│   └── sounds/
+│       ├── flap.wav        # Wing flap sound
+│       ├── score.wav       # Score point sound
+│       └── hit.wav         # Collision sound
+├── src/
+│   ├── main.c              # Entry point & game loop
+│   ├── game.h              # Game structures & constants
+│   ├── game.c              # Core game logic
+│   ├── player.h            # Bird/player API
+│   └── player.c            # Bird physics & rendering
+├── settings.dat            # Saved settings (auto-generated)
+└── README.md
 ```
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-
-- GCC or another C compiler that supports C99. [web:141]  
-- [raylib](https://www.raylib.com) installed (headers and libraries available on your system). [web:141]
-
-### Steps
-
-1. **Clone the repository**
-```
-git clone https://github.com/YourUsername/FlappyBird.git
-cd FlappyBird
-```
-
-
-2. **Build the game (Windows example)**
-
-```
-gcc src/main.c src/game.c src/player.c ^
--I C:\raylib\include ^
--L C:\raylib\lib ^
--lraylib -lopengl32 -lgdi32 -lwinmm ^
--o FlappyBird.exe
-```
-
-On Linux/macOS, link against `raylib` and the appropriate system libraries as described in the raylib build instructions. [web:141]
-
-3. **Run the game**
-
-```
-./FlappyBird.exe # Windows
-./FlappyBird # Linux/macOS (name depends on your build)
-```
-
----
-
-## 🎮 How to Play
-
-- **First Screen** – You’ll see “Press SPACE or Left Click” centered on the screen.  
-- **Start** – Press **SPACE** or **Left Mouse Button** to begin; the bird starts falling immediately.  
-- **Flap** – Press **SPACE** / **Left Click** to flap and stay in the air.  
-- **Score** – Fly through the gaps between pipes to increase your score.  
-- **Game Over** – Colliding with a pipe or the ground ends the run; “GAME OVER” and a restart hint appear.  
-- **Restart** – Press **SPACE** / **Left Click** on the game‑over screen to instantly start a new run. [web:141]
-
----
 
 ## 🎨 Customization
 
-### Tuning Physics & Difficulty
+### Adding Custom Assets
+1. Replace images in `assets/` folder (keep same dimensions)
+2. Replace sounds in `assets/sounds/` (WAV format recommended)
+3. Add custom font to `assets/font.ttf` (TTF format)
 
-In `src/game.h`, you can adjust:
-
+### Tweaking Gameplay
+Edit constants in `game.h`:
+```c
+#define PIPE_SPEED      150.0f    // Pipe scrolling speed
+#define PIPE_SPAWN_TIME 2.0f      // Time between pipes
+#define MIN_GAP_SIZE    100       // Minimum gap size
+#define MAX_GAP_SIZE    160       // Maximum gap size
+#define MAX_LIVES       3         // Number of lives
 ```
-#define GRAVITY 420.0f
-#define FLAP_STRENGTH -260.0f
 
-#define PIPE_SPEED 160.0f
-#define PIPE_SPAWN_TIME 2.0f
+## 🐛 Known Issues
 
-#define MIN_GAP_SIZE 135
-#define MAX_GAP_SIZE 185
-```
+- Screen shake may be too intense on some systems (can be disabled in settings)
+- Custom fonts require proper TTF files (falls back to default font if missing)
 
-- Increase `PIPE_SPEED` or decrease `MIN_GAP_SIZE` for a harder game.  
-- Tweak `GRAVITY` and `FLAP_STRENGTH` to change the feel of the bird. [web:141]
+## 🚀 Future Features
 
-### Swapping Art & Fonts
+- [ ] Leaderboard system
+- [ ] Multiple bird skins
+- [ ] Day/night cycle
+- [ ] Power-ups
+- [ ] Different difficulty modes
+- [ ] Background music
+- [ ] Mobile touch controls
 
-- Replace `bg.png`, `bird.png`, or `pipe.png` with your own art (keep sizes similar for best results).  
-- Drop in any pixel/arcade TTF as `assets/font.ttf` to change the UI style (e.g., Press Start 2P). [web:145]
+## 📝 License
 
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔮 Possible Future Enhancements
+## 🙏 Acknowledgments
 
-- Separate `pipe_up` / `pipe_down` textures for more detailed graphics.  
-- Animated bird wings using sprite‑sheet frames.  
-- Parallax backgrounds and day/night cycles.  
-- High‑score saving to a file.  
-- Mobile controls (touch/tap) or controller support. [web:141]
+- **Raylib** - Amazing game framework by [Ramon Santamaria](https://github.com/raysan5)
+- **Original Flappy Bird** - Created by Dong Nguyen
+- **Pixel Fonts** - [dafont.com](https://www.dafont.com)
 
----
+## 📧 Contact
 
-## 👨‍💻 Author
+**Your Name** - [@RM1338](https://linkedin.in/ronelm)
 
-**Ronel Abraham Mathew**  
-- GitHub: [RM1338](https://github.com/RM1338)  
-- LinkedIn: [Ronel Abraham Mathew](https://linkedin.com/in/ronelm)
+Project Link: [https://github.com/RM1338/FlappyBird](https://github.com/RM1338/FlappyBird)
 
 ---
 
-## ⭐ Show Your Support
+<div align="center">
+  
+Made with ❤️ and lots of ☕
 
-If this project helped you learn raylib or C game dev, consider giving the repo a ⭐ on GitHub and experimenting with your own art, physics, and features!
+If you found this project helpful, consider giving it a ⭐!
+
+</div>
