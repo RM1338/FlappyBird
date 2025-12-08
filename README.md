@@ -26,7 +26,7 @@
   
 | Main Menu | Game Over |
 |:---------:|:---------:|
-| ![Menu](./githubAssets/MainMenu.png) | ![Game Over](./githubAssets/GameOver.png) |
+| ![Menu](./githubAssets/MainMenu.png) | ![Game Over](https://github.com/RM1338/FlappyBird/blob/main/githubAssets/GaveOver.png?raw=true) |
 
 ### Gameplay in Action
 
