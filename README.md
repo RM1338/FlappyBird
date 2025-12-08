@@ -1,5 +1,8 @@
 # 🐦 Flappy Bird - C Game Clone
 
+![Flappy Bird Banner](./githubAssets/banner.png)
+
+
 <div align="center">
   
 ![Flappy Bird](https://img.shields.io/badge/Flappy%20Bird-Game-yellow?style=for-the-badge&logo=gamepad)
@@ -182,7 +185,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-**Your Name** - [@RM1338](https://linkedin.in/ronelm)
+**Ronel Abraham Mathew** - [@RM1338](https://www.linkedin.com/in/ronelm/)
 
 Project Link: [https://github.com/RM1338/FlappyBird](https://github.com/RM1338/FlappyBird)
 
