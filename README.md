@@ -37,27 +37,27 @@
 ## ✨ Features
 
 ### 🎮 Core Gameplay
-- **Smooth Physics** - Realistic gravity and flapping mechanics
-- **Procedural Generation** - Randomly generated pipes for endless gameplay
-- **Score Tracking** - Keep track of your best score across sessions
-- **Collision Detection** - Precise hit detection system
+- **Smooth Physics** - Realistic gravity and flapping mechanics.
+- **Procedural Generation** - Randomly generated pipes for endless gameplay.
+- **Score Tracking** - Keep track of your best score across sessions.
+- **Collision Detection** - Precise hit detection system.
 
 ### 💖 Life System
-- **3 Lives** - Get three chances before game over
-- **Respawn Countdown** - 3-second countdown timer after losing a life
-- **Pixel Art Hearts** - Retro-style heart indicators
+- **3 Lives** - Get three chances before game over.
+- **Respawn Countdown** - 3-second countdown timer after losing a life.
+- **Pixel Art Hearts** - Retro-style heart indicators.
 
 ### 🎨 Visual Polish
-- **Screen Shake** - Impact feedback on collisions
-- **Pixel Art Graphics** - Authentic retro aesthetic
-- **Custom Fonts** - Supports custom TTF fonts for UI
-- **Smooth Animations** - Fluid bird movement and rotation
+- **Screen Shake** - Impact feedback on collisions.
+- **Pixel Art Graphics** - Authentic retro aesthetic.
+- **Custom Fonts** - Supports custom TTF fonts for UI.
+- **Smooth Animations** - Fluid bird movement and rotation.
 
 ### ⚙️ Settings & Controls
-- **Pause Menu** - Pause anytime during gameplay (ESC or P)
-- **Volume Control** - Adjust sound effects volume
-- **Screen Shake Toggle** - Enable/disable screen shake effect
-- **Persistent Settings** - Settings saved between game sessions
+- **Pause Menu** - Pause anytime during gameplay (ESC or P).
+- **Volume Control** - Adjust sound effects volume.
+- **Screen Shake Toggle** - Enable/disable screen shake effect.
+- **Persistent Settings** - Settings saved between game sessions.
 
 ### 🔊 Audio
 - **Sound Effects**
