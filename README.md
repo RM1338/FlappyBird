@@ -196,6 +196,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Ronel Abraham Mathew** - [@RM1338](https://www.linkedin.com/in/ronelm/)
 
+AI Engineer and a Polymath who is building problem-solving products.
+
 Project Link: [https://github.com/RM1338/FlappyBird](https://github.com/RM1338/FlappyBird)
 
 ---
