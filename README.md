@@ -10,7 +10,7 @@
 ![Raylib](https://img.shields.io/badge/Raylib-Framework-red?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
 
-**A modern recreation of the classic Flappy Bird game, built from scratch in C using the Raylib framework.**
+**A recreation of the classic Flappy Bird game, built from scratch in C using the Raylib framework.**
 
 [Features](#-features) • [Demo](#-demo) • [Installation](#-installation) • [Controls](#-controls) • [Project Structure](#-project-structure)
 
